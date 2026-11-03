@@ -80,13 +80,6 @@ export function Header({
             </span>
           </Link>
 
-          <Link
-            href="/admin/login"
-            className="hidden sm:inline-flex items-center justify-center bg-[#0c2444] hover:bg-sky-950 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-sm transition-all"
-          >
-            <span>Login / Sign Up</span>
-          </Link>
-
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -110,11 +103,11 @@ export function Header({
           </nav>
           <div className="pt-2 border-t border-slate-100">
             <Link
-              href="/admin/login"
+              href="/checkout"
               onClick={() => setMobileMenuOpen(false)}
-              className="block w-full text-center bg-[#0c2444] text-white font-bold text-xs py-2.5 rounded-lg"
+              className="block w-full text-center bg-[#0c2444] hover:bg-sky-950 text-white font-bold text-xs py-2.5 rounded-xl shadow-sm"
             >
-              Admin Portal
+              Order Now • Free Delivery
             </Link>
           </div>
         </div>
