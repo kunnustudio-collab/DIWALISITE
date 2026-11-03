@@ -24,7 +24,7 @@ export default function AdminPaymentSettingsPage() {
   // Settings form state
   const [isUpiEnabled, setIsUpiEnabled] = useState(true);
   const [isCodEnabled, setIsCodEnabled] = useState(true);
-  const [isTestMode, setIsTestMode] = useState(true);
+  const [isTestMode, setIsTestMode] = useState(false);
   const [customerReturnUrl, setCustomerReturnUrl] = useState("");
   const [merchantUpiId, setMerchantUpiId] = useState("BHARATPE09892884396@yesbankltd");
   const [merchantPayeeName, setMerchantPayeeName] = useState("AquaHome");

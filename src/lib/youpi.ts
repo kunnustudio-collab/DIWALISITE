@@ -44,7 +44,7 @@ export async function createYoupiPaymentSession(
   params: YoupiCreatePaymentRequest
 ): Promise<YoupiCreatePaymentResponse> {
   const apiUrl = process.env.YOUPI_API_URL || "http://localhost:6100";
-  const merchantId = process.env.YOUPI_MERCHANT_ID || "youpi_merchant_demo_01";
+  const merchantId = process.env.YOUPI_MERCHANT_ID || "youpi_merchant_live";
   const formattedAmount = params.amount.toFixed(2); // "1499.00"
 
   const requestBody = {

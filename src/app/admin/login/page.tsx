@@ -6,8 +6,8 @@ import { Lock, Mail, ShieldAlert, ArrowRight, Flame } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@aquathermal.store");
-  const [password, setPassword] = useState("AdminSecurePassword2026!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -103,10 +103,9 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <div className="p-3 bg-slate-950 rounded-xl border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
-          <p className="font-semibold text-slate-300">Initial Setup Credentials:</p>
-          <p>Email: <code className="text-sky-400">admin@aquathermal.store</code></p>
-          <p>Password: <code className="text-sky-400">AdminSecurePassword2026!</code></p>
+        <div className="flex items-center justify-center gap-1.5 text-center text-[11px] text-slate-500 pt-1">
+          <Lock className="w-3.5 h-3.5 text-emerald-500" />
+          <span>256-Bit SSL Encrypted Admin Authentication</span>
         </div>
       </div>
     </div>

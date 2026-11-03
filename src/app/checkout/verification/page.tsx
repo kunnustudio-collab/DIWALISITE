@@ -631,10 +631,13 @@ function VerificationContent() {
                 </button>
               </form>
 
-              {/* Safe Mode Helper */}
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] text-slate-500 flex items-center justify-between">
-                <span>⚡ Test Mode Simulation: You can enter any 12-digit number (e.g. <code>432109876543</code>).</span>
-                <span className="font-semibold text-sky-700">Safe Sandbox</span>
+              {/* Live Secure Payment Notice */}
+              <div className="p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center justify-between">
+                <span className="flex items-center gap-1.5 font-medium">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Real-time bank ledger reconciliation powered by BharatPe & Yes Bank.</span>
+                </span>
+                <span className="font-bold text-emerald-700 shrink-0 ml-2">Live & Secure</span>
               </div>
             </div>
 
