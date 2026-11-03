@@ -26,6 +26,8 @@ export default function AdminPaymentSettingsPage() {
   const [isCodEnabled, setIsCodEnabled] = useState(true);
   const [isTestMode, setIsTestMode] = useState(true);
   const [customerReturnUrl, setCustomerReturnUrl] = useState("");
+  const [merchantUpiId, setMerchantUpiId] = useState("BHARATPE09892884396@yesbankltd");
+  const [merchantPayeeName, setMerchantPayeeName] = useState("AquaHome");
 
   const loadData = async () => {
     setLoading(true);
@@ -38,6 +40,8 @@ export default function AdminPaymentSettingsPage() {
         setIsCodEnabled(json.settings.isCodEnabled);
         setIsTestMode(json.settings.isTestMode);
         setCustomerReturnUrl(json.settings.customerReturnUrl || "");
+        if (json.settings.merchantUpiId) setMerchantUpiId(json.settings.merchantUpiId);
+        if (json.settings.merchantPayeeName) setMerchantPayeeName(json.settings.merchantPayeeName);
       }
     } catch (err) {
       console.error(err);
@@ -64,6 +68,8 @@ export default function AdminPaymentSettingsPage() {
           isCodEnabled,
           isTestMode,
           customerReturnUrl,
+          merchantUpiId,
+          merchantPayeeName,
         }),
       });
 
@@ -399,6 +405,38 @@ export default function AdminPaymentSettingsPage() {
               />
               <span className="text-[10px] text-slate-400">
                 Used to verify x-gateway-signature HMAC-SHA256 headers.
+              </span>
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Merchant UPI ID / VPA (BharatPe / Bank) *
+              </label>
+              <input
+                type="text"
+                value={merchantUpiId}
+                onChange={(e) => setMerchantUpiId(e.target.value)}
+                placeholder="BHARATPE09892884396@yesbankltd"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono text-xs font-bold text-slate-900"
+              />
+              <span className="text-[10px] text-slate-400">
+                Payment QR and mobile UPI intent links will transfer to this address.
+              </span>
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">
+                Merchant Name Displayed in UPI Apps *
+              </label>
+              <input
+                type="text"
+                value={merchantPayeeName}
+                onChange={(e) => setMerchantPayeeName(e.target.value)}
+                placeholder="AquaHome"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+              />
+              <span className="text-[10px] text-slate-400">
+                Shows on Google Pay, PhonePe, and Paytm transaction screen as the payee.
               </span>
             </div>
 

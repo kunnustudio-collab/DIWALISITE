@@ -32,6 +32,16 @@ export async function GET(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
+    const [upiSetting, payeeSetting, qrSetting] = await Promise.all([
+      prisma.siteSetting.findUnique({ where: { key: "merchant_upi_id" } }),
+      prisma.siteSetting.findUnique({ where: { key: "merchant_payee_name" } }),
+      prisma.siteSetting.findUnique({ where: { key: "merchant_qr_image" } }),
+    ]);
+
+    const merchantUpiId = upiSetting?.value || "BHARATPE09892884396@yesbankltd";
+    const merchantPayeeName = payeeSetting?.value || "AquaHome";
+    const merchantQrImage = qrSetting?.value || "/images/bharatpe-qr.jpg";
+
     // Security check: unauthenticated customer must provide valid unguessable accessToken
     if (!admin) {
       if (!token || token !== order.accessToken) {
@@ -58,6 +68,9 @@ export async function GET(
           orderStatus: order.orderStatus,
           createdAt: order.createdAt,
           items: order.items,
+          merchantUpiId,
+          merchantPayeeName,
+          merchantQrImage,
           statusHistory: order.statusHistory.map((sh) => ({
             status: sh.toStatus,
             date: sh.createdAt,
@@ -79,6 +92,9 @@ export async function GET(
       order: {
         ...order,
         shippingAddress: JSON.parse(order.shippingAddressJson),
+        merchantUpiId,
+        merchantPayeeName,
+        merchantQrImage,
       },
     });
   } catch (err: any) {

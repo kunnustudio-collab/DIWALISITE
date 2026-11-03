@@ -222,6 +222,9 @@ async function main() {
     { key: "announcement_link", value: "#hero-buy", group: "announcement" },
     { key: "shipping_fee", value: "0", group: "general" },
     { key: "estimated_delivery_days", value: "2 to 4 Business Days", group: "general" },
+    { key: "merchant_upi_id", value: "BHARATPE09892884396@yesbankltd", group: "payment" },
+    { key: "merchant_payee_name", value: "AquaHome", group: "payment" },
+    { key: "merchant_qr_image", value: "/images/bharatpe-qr.jpg", group: "payment" },
   ];
 
   for (const s of defaultSettings) {
