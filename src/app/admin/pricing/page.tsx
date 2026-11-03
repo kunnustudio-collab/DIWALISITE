@@ -25,7 +25,9 @@ export default function AdminPricingPage() {
     async function loadPricing() {
       try {
         const res = await fetch("/api/pricing");
-        const data = await res.json();
+        if (!res.ok) return;
+        const text = await res.text();
+        const data = JSON.parse(text);
         if (data.pricing) {
           setProduct(data.pricing);
           setOriginalPrice(data.pricing.originalPrice);
@@ -70,7 +72,16 @@ export default function AdminPricingPage() {
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        if (!res.ok) {
+          throw new Error(`Server returned status ${res.status}. Please ensure you are logged into admin.`);
+        }
+      }
+
       if (!res.ok) {
         throw new Error(data.error || "Failed to update pricing");
       }

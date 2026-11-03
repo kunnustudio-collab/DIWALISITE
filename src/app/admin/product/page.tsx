@@ -126,7 +126,16 @@ export default function AdminProductPage() {
         }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        if (!res.ok) {
+          throw new Error(`Server returned status ${res.status}. Please check your login session.`);
+        }
+      }
+
       if (!res.ok) {
         throw new Error(data.error || "Failed to update product");
       }
