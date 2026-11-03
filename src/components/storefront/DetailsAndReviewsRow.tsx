@@ -93,8 +93,8 @@ export function DetailsAndReviewsRow({ stats }: DetailsAndReviewsProps) {
             {/* Product Head Cutout matching screenshot */}
             <div className="absolute right-2 bottom-0 w-44 sm:w-56 h-44 sm:h-52 overflow-hidden pointer-events-none group-hover:scale-105 transition-transform duration-500">
               <img
-                src="/images/zella-head-closeup-2x.jpg"
-                alt="Havells Zella Blue Ergonomic Head"
+                src="/images/zella-folded-body.jpg"
+                alt="Havells Zella Blue Ergonomic Body"
                 className="w-full h-full object-contain object-bottom-right"
               />
             </div>

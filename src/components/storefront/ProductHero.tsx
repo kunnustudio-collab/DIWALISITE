@@ -11,8 +11,10 @@ import {
   ShoppingCart,
   ArrowRight,
   Lock,
-  Sparkles,
-  Info,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  Sliders,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
@@ -38,12 +40,58 @@ interface ProductHeroProps {
   };
 }
 
+const defaultGallery = [
+  {
+    id: "hero-dual",
+    url: "/images/havells-zella-hero.jpg",
+    altText: "Havells Zella 1000W Immersion Rod - Dual View Folded & Deployed in Water Splash",
+    title: "Dual View (Hero)",
+  },
+  {
+    id: "hero-hanger",
+    url: "/images/zella-opened-hanger.jpg",
+    altText: "Havells Zella with Open Bucket Hanger Flaps and Nickel Coils",
+    title: "Bucket Hanger",
+  },
+  {
+    id: "hero-body",
+    url: "/images/zella-folded-body.jpg",
+    altText: "Havells Zella Compact Folded Body with Indicator Window",
+    title: "Folded Body",
+  },
+  {
+    id: "hero-dial",
+    url: "/images/zella-dial-knob.jpg",
+    altText: "Havells Zella Rotary Temperature Setting Dial (Low, Medium, High)",
+    title: "Temp Dial",
+  },
+  {
+    id: "hero-coils",
+    url: "/images/zella-nickel-coils.jpg",
+    altText: "Heavy-Duty Nickel Plated Heating Coils and Water Level Shaft",
+    title: "Nickel Coils",
+  },
+];
+
 export function ProductHero({ product }: ProductHeroProps) {
   const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [activeSlide, setActiveSlide] = useState(0);
   const [activeHotspot, setActiveHotspot] = useState<number | null>(null);
   const [cartAddedNotice, setCartAddedNotice] = useState(false);
+
+  // Gallery items - prioritize product.images from database if populated
+  const gallery =
+    product.images && product.images.length > 0
+      ? product.images.map((img, i) => ({
+          id: img.id,
+          url: img.url,
+          altText: img.altText || product.name,
+          title: defaultGallery[i]?.title || `View ${i + 1}`,
+        }))
+      : defaultGallery;
+
+  const currentImage = gallery[activeSlide] || gallery[0];
 
   const handleQtyChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, Math.min(10, prev + delta)));
@@ -58,7 +106,13 @@ export function ProductHero({ product }: ProductHeroProps) {
     router.push(`/checkout?qty=${quantity}`);
   };
 
-  const heroImage = "/images/hero-rod-splash-2x.jpg";
+  const nextSlide = () => {
+    setActiveSlide((prev) => (prev + 1) % gallery.length);
+  };
+
+  const prevSlide = () => {
+    setActiveSlide((prev) => (prev - 1 + gallery.length) % gallery.length);
+  };
 
   return (
     <section
@@ -145,7 +199,7 @@ export function ProductHero({ product }: ProductHeroProps) {
 
               <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>In Stock • Free Delivery</span>
+                <span>In Stock • Free Delivery Across India</span>
               </div>
             </div>
 
@@ -158,6 +212,7 @@ export function ProductHero({ product }: ProductHeroProps) {
                   onClick={() => handleQtyChange(-1)}
                   disabled={quantity <= 1}
                   className="w-6 h-6 flex items-center justify-center text-slate-600 hover:text-slate-900 font-bold disabled:opacity-30"
+                  aria-label="Decrease quantity"
                 >
                   −
                 </button>
@@ -169,6 +224,7 @@ export function ProductHero({ product }: ProductHeroProps) {
                   onClick={() => handleQtyChange(1)}
                   disabled={quantity >= 10}
                   className="w-6 h-6 flex items-center justify-center text-slate-600 hover:text-slate-900 font-bold disabled:opacity-30"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
@@ -198,7 +254,7 @@ export function ProductHero({ product }: ProductHeroProps) {
             {/* Cart Notification Popup */}
             {cartAddedNotice && (
               <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-semibold rounded-xl flex items-center justify-between animate-in fade-in duration-200">
-                <span>✓ Added {quantity} unit(s) of Havells Zella to your bag.</span>
+                <span>✓ Added {quantity} unit(s) of Havells Zella to your cart.</span>
                 <Link href="/checkout" className="underline font-bold text-emerald-900">
                   Go to Checkout →
                 </Link>
@@ -208,85 +264,187 @@ export function ProductHero({ product }: ProductHeroProps) {
             {/* Micro-Trust Note */}
             <div className="flex items-center gap-1.5 text-xs text-slate-500 pt-1">
               <Lock className="w-3.5 h-3.5 text-sky-600" />
-              <span>Secure Payment via YouPI-PG & UPI</span>
+              <span>Secure Payment via YouPI-PG & UPI • Fast Dispatch</span>
             </div>
           </div>
 
           {/* ================= RIGHT COLUMN: Hero Immersion Rod in Water Splash ================= */}
           <div className="lg:col-span-6 relative flex flex-col items-center justify-center">
             {/* Main Stage with Water Splash */}
-            <div className="relative w-full max-w-lg aspect-square sm:aspect-[4/3] rounded-3xl overflow-hidden flex items-center justify-center group shadow-xl shadow-sky-500/10 border border-white/60">
+            <div className="relative w-full max-w-lg aspect-square rounded-3xl overflow-hidden flex items-center justify-center group shadow-2xl shadow-sky-600/15 border-2 border-white/80 bg-gradient-to-b from-sky-100 to-sky-200">
               <img
-                src={heroImage}
-                alt={product.name}
-                className="w-full h-full object-cover object-center group-hover:scale-103 transition-transform duration-700"
+                src={currentImage.url}
+                alt={currentImage.altText || product.name}
+                className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500"
               />
 
-              {/* Connecting Hotspot Labels around the product */}
-              {/* Hotspot 1: Smart Hanger */}
-              <div
-                className="absolute top-10 left-6 sm:left-10 group/pin cursor-pointer"
-                onMouseEnter={() => setActiveHotspot(1)}
-                onMouseLeave={() => setActiveHotspot(null)}
+              {/* Prev / Next Arrows */}
+              <button
+                type="button"
+                onClick={prevSlide}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-700 hover:text-slate-900 shadow-md flex items-center justify-center transition-all opacity-70 group-hover:opacity-100"
+                aria-label="Previous view"
               >
-                <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-sky-200 text-[11px] font-bold text-slate-900 animate-pulse">
-                  <span className="w-2 h-2 rounded-full bg-sky-500" />
-                  <span>Collapsible Hanger</span>
-                </div>
-                {activeHotspot === 1 && (
-                  <div className="absolute top-8 left-0 w-48 bg-slate-900 text-white p-2.5 rounded-xl text-[10px] shadow-xl z-20">
-                    Dual utility flap that folds open as a safe bucket edge hook.
-                  </div>
-                )}
-              </div>
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={nextSlide}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-700 hover:text-slate-900 shadow-md flex items-center justify-center transition-all opacity-70 group-hover:opacity-100"
+                aria-label="Next view"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
 
-              {/* Hotspot 2: Neon Indicator */}
-              <div
-                className="absolute top-36 right-4 sm:right-8 group/pin cursor-pointer"
-                onMouseEnter={() => setActiveHotspot(2)}
-                onMouseLeave={() => setActiveHotspot(null)}
-              >
-                <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-sky-200 text-[11px] font-bold text-slate-900">
-                  <span className="w-2 h-2 rounded-full bg-red-500" />
-                  <span>Neon Power Lamp</span>
-                </div>
-                {activeHotspot === 2 && (
-                  <div className="absolute top-8 right-0 w-48 bg-slate-900 text-white p-2.5 rounded-xl text-[10px] shadow-xl z-20">
-                    Bright neon indicator illuminates when actively heating water.
+              {/* Interactive Hotspot Pins (Only on Slide 0 - Dual Hero View) */}
+              {activeSlide === 0 && (
+                <>
+                  {/* Hotspot 1: Temperature Dial (Top Left) */}
+                  <div
+                    className="absolute top-[13%] left-[34%] -translate-x-1/2 -translate-y-1/2 group/pin cursor-pointer z-20"
+                    onMouseEnter={() => setActiveHotspot(1)}
+                    onMouseLeave={() => setActiveHotspot(null)}
+                    onClick={() => setActiveHotspot(activeHotspot === 1 ? null : 1)}
+                  >
+                    <div className="relative flex items-center justify-center">
+                      <span className="absolute w-6 h-6 rounded-full bg-sky-400/50 animate-ping" />
+                      <div className="w-5 h-5 rounded-full bg-sky-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border-2 border-white">
+                        1
+                      </div>
+                    </div>
+                    {activeHotspot === 1 && (
+                      <div className="absolute top-7 -left-12 sm:left-0 w-48 bg-slate-900/95 backdrop-blur-md text-white p-2.5 rounded-xl text-[11px] shadow-2xl z-30 border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+                        <p className="font-bold text-sky-400 flex items-center gap-1 mb-1">
+                          <Sliders className="w-3 h-3" />
+                          <span>Rotary Dial Knob</span>
+                        </p>
+                        <p className="text-slate-200 leading-snug">
+                          Ergonomic temperature adjustment between Low, Medium, and High settings.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* Hotspot 3: Nickel Element */}
-              <div
-                className="absolute bottom-16 left-6 sm:left-12 group/pin cursor-pointer"
-                onMouseEnter={() => setActiveHotspot(3)}
-                onMouseLeave={() => setActiveHotspot(null)}
-              >
-                <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-sky-200 text-[11px] font-bold text-slate-900">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Nickel-Plated Element</span>
-                </div>
-                {activeHotspot === 3 && (
-                  <div className="absolute bottom-8 left-0 w-52 bg-slate-900 text-white p-2.5 rounded-xl text-[10px] shadow-xl z-20">
-                    Corrosion-resistant nickel coating prevents mineral scaling in hard water.
+                  {/* Hotspot 2: Collapsible Bucket Hanger (Top Right) */}
+                  <div
+                    className="absolute top-[20%] left-[68%] -translate-x-1/2 -translate-y-1/2 group/pin cursor-pointer z-20"
+                    onMouseEnter={() => setActiveHotspot(2)}
+                    onMouseLeave={() => setActiveHotspot(null)}
+                    onClick={() => setActiveHotspot(activeHotspot === 2 ? null : 2)}
+                  >
+                    <div className="relative flex items-center justify-center">
+                      <span className="absolute w-6 h-6 rounded-full bg-sky-400/50 animate-ping" />
+                      <div className="w-5 h-5 rounded-full bg-sky-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border-2 border-white">
+                        2
+                      </div>
+                    </div>
+                    {activeHotspot === 2 && (
+                      <div className="absolute top-7 right-0 sm:-right-8 w-52 bg-slate-900/95 backdrop-blur-md text-white p-2.5 rounded-xl text-[11px] shadow-2xl z-30 border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+                        <p className="font-bold text-sky-400 flex items-center gap-1 mb-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>Collapsible Flap Hanger</span>
+                        </p>
+                        <p className="text-slate-200 leading-snug">
+                          Dual wings open into a sturdy hook to safely attach to the bucket edge.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
+
+                  {/* Hotspot 3: Water Level Gauge (Mid Right) */}
+                  <div
+                    className="absolute top-[42%] left-[68%] -translate-x-1/2 -translate-y-1/2 group/pin cursor-pointer z-20"
+                    onMouseEnter={() => setActiveHotspot(3)}
+                    onMouseLeave={() => setActiveHotspot(null)}
+                    onClick={() => setActiveHotspot(activeHotspot === 3 ? null : 3)}
+                  >
+                    <div className="relative flex items-center justify-center">
+                      <span className="absolute w-6 h-6 rounded-full bg-sky-400/50 animate-ping" />
+                      <div className="w-5 h-5 rounded-full bg-sky-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border-2 border-white">
+                        3
+                      </div>
+                    </div>
+                    {activeHotspot === 3 && (
+                      <div className="absolute top-7 right-0 sm:-right-6 w-52 bg-slate-900/95 backdrop-blur-md text-white p-2.5 rounded-xl text-[11px] shadow-2xl z-30 border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+                        <p className="font-bold text-sky-400 flex items-center gap-1 mb-1">
+                          <Shield className="w-3 h-3" />
+                          <span>Water Level Gauge</span>
+                        </p>
+                        <p className="text-slate-200 leading-snug">
+                          Embossed Minimum & Maximum immersion lines for safe, dry-heat protected operation.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Hotspot 4: Nickel Coils (Bottom Right) */}
+                  <div
+                    className="absolute top-[80%] left-[69%] -translate-x-1/2 -translate-y-1/2 group/pin cursor-pointer z-20"
+                    onMouseEnter={() => setActiveHotspot(4)}
+                    onMouseLeave={() => setActiveHotspot(null)}
+                    onClick={() => setActiveHotspot(activeHotspot === 4 ? null : 4)}
+                  >
+                    <div className="relative flex items-center justify-center">
+                      <span className="absolute w-6 h-6 rounded-full bg-sky-400/50 animate-ping" />
+                      <div className="w-5 h-5 rounded-full bg-sky-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border-2 border-white">
+                        4
+                      </div>
+                    </div>
+                    {activeHotspot === 4 && (
+                      <div className="absolute bottom-8 right-0 sm:-right-6 w-52 bg-slate-900/95 backdrop-blur-md text-white p-2.5 rounded-xl text-[11px] shadow-2xl z-30 border border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+                        <p className="font-bold text-sky-400 flex items-center gap-1 mb-1">
+                          <Zap className="w-3 h-3" />
+                          <span>Nickel-Plated Coil</span>
+                        </p>
+                        <p className="text-slate-200 leading-snug">
+                          1000W heavy copper element coated with anti-corrosive nickel plating.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* Badge Overlay */}
+              <div className="absolute bottom-3 right-3 bg-white/80 backdrop-blur-xs text-[10px] font-bold text-sky-900 px-2.5 py-1 rounded-full border border-sky-100 flex items-center gap-1">
+                <span>{currentImage.title}</span>
               </div>
             </div>
 
-            {/* Slider Dots matching reference */}
-            <div className="flex items-center justify-center gap-2 mt-4">
-              {[0, 1, 2, 3].map((dot) => (
+            {/* Slider Dots */}
+            <div className="flex items-center justify-center gap-2 mt-3">
+              {gallery.map((img, dot) => (
                 <button
-                  key={dot}
+                  key={img.id || dot}
                   type="button"
                   onClick={() => setActiveSlide(dot)}
                   className={`h-2 rounded-full transition-all ${
                     activeSlide === dot ? "w-6 bg-sky-600" : "w-2 bg-sky-200 hover:bg-sky-400"
                   }`}
-                  aria-label={`Slide ${dot + 1}`}
+                  aria-label={`Switch to ${img.title || `Slide ${dot + 1}`}`}
                 />
+              ))}
+            </div>
+
+            {/* Thumbnail Preview Strip below */}
+            <div className="flex items-center justify-center gap-2 mt-3 overflow-x-auto max-w-full px-2 py-1">
+              {gallery.map((img, idx) => (
+                <button
+                  key={`thumb-${img.id || idx}`}
+                  type="button"
+                  onClick={() => setActiveSlide(idx)}
+                  className={`relative w-14 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
+                    activeSlide === idx
+                      ? "border-sky-600 shadow-md scale-105 ring-2 ring-sky-300"
+                      : "border-white/80 hover:border-sky-300 opacity-70 hover:opacity-100"
+                  }`}
+                >
+                  <img
+                    src={img.url}
+                    alt={img.altText || `Thumbnail ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
               ))}
             </div>
           </div>
