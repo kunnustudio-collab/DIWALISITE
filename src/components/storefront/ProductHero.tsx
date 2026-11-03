@@ -1,19 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  Star,
-  ShieldCheck,
-  Truck,
-  CheckCircle2,
-  Clock,
-  Sparkles,
-  ShoppingBag,
   Zap,
+  Shield,
+  Lightbulb,
+  CheckCircle2,
+  ShoppingCart,
   ArrowRight,
-  AlertCircle,
+  Lock,
+  Sparkles,
+  Info,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
@@ -37,287 +36,258 @@ interface ProductHeroProps {
     averageRating: number | null;
     totalApprovedReviews: number;
   };
-  deliveryDays?: string;
 }
 
-export function ProductHero({
-  product,
-  stats,
-  deliveryDays = "2 to 4 Business Days",
-}: ProductHeroProps) {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+export function ProductHero({ product }: ProductHeroProps) {
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
-
-  const images =
-    product.images && product.images.length > 0
-      ? product.images
-      : [
-          {
-            id: "default-1",
-            url: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=1000&q=80",
-            altText: product.name,
-          },
-        ];
-
-  const currentImage = images[selectedImageIndex] || images[0];
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [activeHotspot, setActiveHotspot] = useState<number | null>(null);
+  const [cartAddedNotice, setCartAddedNotice] = useState(false);
 
   const handleQtyChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, Math.min(10, prev + delta)));
   };
 
-  const savings = Math.max(0, product.originalPrice - product.sellingPrice);
+  const handleAddToCart = () => {
+    setCartAddedNotice(true);
+    setTimeout(() => setCartAddedNotice(false), 3000);
+  };
+
+  const handleBuyNow = () => {
+    router.push(`/checkout?qty=${quantity}`);
+  };
+
+  const heroImage = "/images/hero-rod-splash-2x.jpg";
 
   return (
-    <section id="product-overview" className="relative pt-6 pb-16 bg-white overflow-hidden">
+    <section
+      id="product-overview"
+      className="relative overflow-hidden bg-gradient-to-br from-[#dff1fd] via-[#eaf5fc] to-[#f4f9fd] pt-8 sm:pt-12 pb-16 lg:pb-24 border-b border-sky-100"
+    >
+      {/* Decorative subtle ambient water background glows */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-sky-200/50 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-blue-100/40 rounded-full blur-2xl -z-10 pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="text-xs text-slate-500 mb-6 flex items-center gap-2">
-          <Link href="/" className="hover:text-sky-600">Home</Link>
-          <span>/</span>
-          <span>Home Appliances</span>
-          <span>/</span>
-          <span>Immersion Heaters</span>
-          <span>/</span>
-          <span className="text-slate-800 font-medium truncate max-w-xs">{product.name}</span>
-        </nav>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+          
+          {/* ================= LEFT COLUMN: Typography & Purchase ================= */}
+          <div className="lg:col-span-6 space-y-6 z-10">
+            {/* Pill Tag */}
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-white/80 backdrop-blur-xs text-sky-800 text-xs font-bold px-3.5 py-1.5 rounded-full border border-sky-200/70 shadow-xs">
+                Trusted. Reliable. Efficient.
+              </span>
+            </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-          {/* ================= LEFT: Product Gallery ================= */}
-          <div className="lg:col-span-7 space-y-4">
-            {/* Main Stage Image */}
-            <div className="relative aspect-square w-full rounded-2xl bg-slate-50 border border-slate-200/80 overflow-hidden shadow-inner group">
-              <img
-                src={currentImage.url}
-                alt={currentImage.altText || product.name}
-                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-              />
+            {/* Massive Editorial Headline */}
+            <div>
+              <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.08]">
+                Havells Zella<br />
+                Immersion Rod<br />
+                <span className="text-sky-600">1000W</span>
+              </h1>
+              <p className="mt-3 text-base sm:text-lg text-slate-600 font-medium">
+                Heat Water Quickly & Effortlessly
+              </p>
+            </div>
 
-              {/* Badges Over Image */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                <span className="inline-flex items-center gap-1.5 bg-sky-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {product.discountPercentage}% OFF
-                </span>
-                <span className="inline-flex items-center gap-1 bg-white/95 backdrop-blur-sm text-slate-800 text-[11px] font-semibold px-2.5 py-1 rounded-md shadow border border-slate-200">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  100% Genuine Havells Pack
-                </span>
+            {/* 3 Horizontal Feature Badges */}
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1">
+              {/* Badge 1 */}
+              <div className="flex items-center gap-2 bg-white/85 backdrop-blur-xs border border-sky-100 px-3.5 py-2 rounded-xl shadow-xs">
+                <div className="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center shrink-0">
+                  <Zap className="w-3.5 h-3.5 text-sky-600 fill-sky-500" />
+                </div>
+                <div className="leading-tight">
+                  <p className="text-[11px] font-black text-slate-900">1000W</p>
+                  <p className="text-[10px] text-slate-500 font-medium">Power</p>
+                </div>
               </div>
 
-              {/* Watermark / Authorized Disclaimer */}
-              <div className="absolute bottom-3 right-3 bg-black/60 text-white text-[10px] px-2.5 py-1 rounded backdrop-blur-sm font-medium">
-                Photo for illustration • Genuine sealed stock
+              {/* Badge 2 */}
+              <div className="flex items-center gap-2 bg-white/85 backdrop-blur-xs border border-sky-100 px-3.5 py-2 rounded-xl shadow-xs">
+                <div className="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center shrink-0">
+                  <Shield className="w-3.5 h-3.5 text-sky-600" />
+                </div>
+                <div className="leading-tight">
+                  <p className="text-[11px] font-black text-slate-900">Copper Tube</p>
+                  <p className="text-[10px] text-slate-500 font-medium">Heating Element</p>
+                </div>
+              </div>
+
+              {/* Badge 3 */}
+              <div className="flex items-center gap-2 bg-white/85 backdrop-blur-xs border border-sky-100 px-3.5 py-2 rounded-xl shadow-xs">
+                <div className="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center shrink-0">
+                  <Lightbulb className="w-3.5 h-3.5 text-sky-600" />
+                </div>
+                <div className="leading-tight">
+                  <p className="text-[11px] font-black text-slate-900">Heating</p>
+                  <p className="text-[10px] text-slate-500 font-medium">Indicator</p>
+                </div>
               </div>
             </div>
 
-            {/* Thumbnail Row */}
-            {images.length > 1 && (
-              <div className="flex items-center gap-3 overflow-x-auto pb-2">
-                {images.map((img, idx) => (
-                  <button
-                    key={img.id || idx}
-                    onClick={() => setSelectedImageIndex(idx)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
-                      selectedImageIndex === idx
-                        ? "border-sky-600 ring-2 ring-sky-600/30 shadow-md scale-102"
-                        : "border-slate-200 hover:border-slate-300 opacity-75 hover:opacity-100"
-                    }`}
-                  >
-                    <img
-                      src={img.url}
-                      alt={img.altText || `View ${idx + 1}`}
-                      className="w-full h-full object-cover object-center"
-                    />
-                  </button>
-                ))}
+            {/* Price Block */}
+            <div className="space-y-1.5 pt-2">
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-3xl sm:text-4xl font-black text-sky-600 tracking-tight">
+                  {formatCurrency(product.sellingPrice)}
+                </span>
+                <span className="text-lg sm:text-xl text-slate-400 line-through font-medium">
+                  {formatCurrency(product.originalPrice)}
+                </span>
+                <span className="text-xs font-bold text-white bg-sky-600 px-2.5 py-0.5 rounded-md shadow-xs">
+                  {product.discountPercentage}% OFF
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>In Stock • Free Delivery</span>
+              </div>
+            </div>
+
+            {/* Quantity Selector & Action Buttons matching reference */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              {/* Quantity Pill */}
+              <div className="inline-flex items-center justify-between border border-slate-300 rounded-xl bg-white px-3 py-2 shadow-xs sm:w-28">
+                <button
+                  type="button"
+                  onClick={() => handleQtyChange(-1)}
+                  disabled={quantity <= 1}
+                  className="w-6 h-6 flex items-center justify-center text-slate-600 hover:text-slate-900 font-bold disabled:opacity-30"
+                >
+                  −
+                </button>
+                <span className="font-bold text-slate-900 text-sm select-none">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleQtyChange(1)}
+                  disabled={quantity >= 10}
+                  className="w-6 h-6 flex items-center justify-center text-slate-600 hover:text-slate-900 font-bold disabled:opacity-30"
+                >
+                  +
+                </button>
+              </div>
+
+              {/* Add to Cart Button */}
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="flex items-center justify-center gap-2 bg-[#0c2444] hover:bg-sky-950 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md transition-all active:scale-[0.98]"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                <span>Add to Cart</span>
+              </button>
+
+              {/* Buy Now Button */}
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="flex items-center justify-center gap-1.5 bg-white hover:bg-slate-50 text-sky-800 border-2 border-sky-300 hover:border-sky-500 font-bold text-sm px-6 py-3 rounded-xl shadow-xs transition-all active:scale-[0.98]"
+              >
+                <span>Buy Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Cart Notification Popup */}
+            {cartAddedNotice && (
+              <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-semibold rounded-xl flex items-center justify-between animate-in fade-in duration-200">
+                <span>✓ Added {quantity} unit(s) of Havells Zella to your bag.</span>
+                <Link href="/checkout" className="underline font-bold text-emerald-900">
+                  Go to Checkout →
+                </Link>
               </div>
             )}
 
-            {/* Quick Trust Highlights under photo */}
-            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-100 text-center">
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                <Zap className="w-5 h-5 text-amber-500 mx-auto mb-1" />
-                <p className="text-xs font-bold text-slate-800">1000W Power</p>
-                <p className="text-[11px] text-slate-500">Heats 15-20L in ~12m</p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                <ShieldCheck className="w-5 h-5 text-sky-600 mx-auto mb-1" />
-                <p className="text-xs font-bold text-slate-800">Nickel Plated</p>
-                <p className="text-[11px] text-slate-500">Scale & Rust Resistant</p>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
-                <p className="text-xs font-bold text-slate-800">2-Year Warranty</p>
-                <p className="text-[11px] text-slate-500">Brand Service Coverage</p>
-              </div>
+            {/* Micro-Trust Note */}
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 pt-1">
+              <Lock className="w-3.5 h-3.5 text-sky-600" />
+              <span>Secure Payment via YouPI-PG & UPI</span>
             </div>
           </div>
 
-          {/* ================= RIGHT: Pricing & Buy Box ================= */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              {/* Product Title & Brand */}
-              <div>
-                <div className="inline-block text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-md uppercase tracking-wider mb-2">
-                  Havells • Series Zella • Electric Blue
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                  {product.name}
-                </h1>
-                <p className="mt-2 text-sm sm:text-base text-slate-600 font-normal">
-                  {product.subtitle}
-                </p>
-              </div>
+          {/* ================= RIGHT COLUMN: Hero Immersion Rod in Water Splash ================= */}
+          <div className="lg:col-span-6 relative flex flex-col items-center justify-center">
+            {/* Main Stage with Water Splash */}
+            <div className="relative w-full max-w-lg aspect-square sm:aspect-[4/3] rounded-3xl overflow-hidden flex items-center justify-center group shadow-xl shadow-sky-500/10 border border-white/60">
+              <img
+                src={heroImage}
+                alt={product.name}
+                className="w-full h-full object-cover object-center group-hover:scale-103 transition-transform duration-700"
+              />
 
-              {/* Star Rating Section - Derived ONLY from Approved Genuine Reviews */}
-              <div className="flex items-center gap-3 py-2 border-y border-slate-100">
-                {stats.totalApprovedReviews > 0 && stats.averageRating ? (
-                  <>
-                    <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded text-amber-900 font-bold text-xs">
-                      <span>{stats.averageRating}</span>
-                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                    </div>
-                    <span className="text-xs text-slate-500">
-                      Based on{" "}
-                      <a href="#reviews" className="font-semibold text-slate-700 underline">
-                        {stats.totalApprovedReviews} genuine verified review{stats.totalApprovedReviews > 1 ? "s" : ""}
-                      </a>
-                    </span>
-                  </>
-                ) : (
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <div className="flex text-amber-400">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="w-3.5 h-3.5 fill-amber-300 text-amber-400" />
-                      ))}
-                    </div>
-                    <span>Fresh batch • Customer reviews appear after admin moderation</span>
+              {/* Connecting Hotspot Labels around the product */}
+              {/* Hotspot 1: Smart Hanger */}
+              <div
+                className="absolute top-10 left-6 sm:left-10 group/pin cursor-pointer"
+                onMouseEnter={() => setActiveHotspot(1)}
+                onMouseLeave={() => setActiveHotspot(null)}
+              >
+                <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-sky-200 text-[11px] font-bold text-slate-900 animate-pulse">
+                  <span className="w-2 h-2 rounded-full bg-sky-500" />
+                  <span>Collapsible Hanger</span>
+                </div>
+                {activeHotspot === 1 && (
+                  <div className="absolute top-8 left-0 w-48 bg-slate-900 text-white p-2.5 rounded-xl text-[10px] shadow-xl z-20">
+                    Dual utility flap that folds open as a safe bucket edge hook.
                   </div>
                 )}
               </div>
 
-              {/* Pricing Display */}
-              <div id="hero-buy" className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-50 to-sky-50/40 border border-sky-100 space-y-2">
-                <div className="flex items-baseline gap-3 flex-wrap">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                    {formatCurrency(product.sellingPrice)}
-                  </span>
-                  {product.originalPrice > product.sellingPrice && (
-                    <>
-                      <span className="text-lg text-slate-400 line-through">
-                        {formatCurrency(product.originalPrice)}
-                      </span>
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                        Save {formatCurrency(savings)} ({product.discountPercentage}% OFF)
-                      </span>
-                    </>
-                  )}
+              {/* Hotspot 2: Neon Indicator */}
+              <div
+                className="absolute top-36 right-4 sm:right-8 group/pin cursor-pointer"
+                onMouseEnter={() => setActiveHotspot(2)}
+                onMouseLeave={() => setActiveHotspot(null)}
+              >
+                <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-sky-200 text-[11px] font-bold text-slate-900">
+                  <span className="w-2 h-2 rounded-full bg-red-500" />
+                  <span>Neon Power Lamp</span>
                 </div>
-                <p className="text-xs text-slate-500">
-                  Inclusive of all taxes. Free Express Delivery across India.
-                </p>
-
-                {/* Stock Availability */}
-                <div className="pt-2 flex items-center justify-between text-xs">
-                  {product.isInStock && product.stockQuantity > 0 ? (
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-                      </span>
-                      <span>In Stock • Ready to Dispatch (Only {product.stockQuantity} left)</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-red-600 font-semibold">
-                      <AlertCircle className="w-3.5 h-3.5" />
-                      <span>Temporarily Out of Stock</span>
-                    </div>
-                  )}
-                </div>
+                {activeHotspot === 2 && (
+                  <div className="absolute top-8 right-0 w-48 bg-slate-900 text-white p-2.5 rounded-xl text-[10px] shadow-xl z-20">
+                    Bright neon indicator illuminates when actively heating water.
+                  </div>
+                )}
               </div>
 
-              {/* Quantity Selector */}
-              {product.isInStock && product.stockQuantity > 0 && (
-                <div className="flex items-center justify-between gap-4 py-1">
-                  <span className="text-sm font-semibold text-slate-700">Select Quantity:</span>
-                  <div className="flex items-center border border-slate-300 rounded-lg bg-white overflow-hidden shadow-sm">
-                    <button
-                      type="button"
-                      onClick={() => handleQtyChange(-1)}
-                      disabled={quantity <= 1}
-                      className="px-3.5 py-1.5 text-slate-600 hover:bg-slate-100 disabled:opacity-40 font-bold text-base transition-colors"
-                    >
-                      −
-                    </button>
-                    <span className="px-4 py-1.5 font-bold text-slate-900 text-sm select-none">
-                      {quantity}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleQtyChange(1)}
-                      disabled={quantity >= Math.min(10, product.stockQuantity)}
-                      className="px-3.5 py-1.5 text-slate-600 hover:bg-slate-100 disabled:opacity-40 font-bold text-base transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
+              {/* Hotspot 3: Nickel Element */}
+              <div
+                className="absolute bottom-16 left-6 sm:left-12 group/pin cursor-pointer"
+                onMouseEnter={() => setActiveHotspot(3)}
+                onMouseLeave={() => setActiveHotspot(null)}
+              >
+                <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-sky-200 text-[11px] font-bold text-slate-900">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Nickel-Plated Element</span>
                 </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="space-y-3 pt-2">
-                <Link
-                  href={`/checkout?qty=${quantity}`}
-                  className="w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-700 hover:to-blue-800 text-white text-base font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transform active:scale-[0.99] transition-all"
-                >
-                  <ShoppingBag className="w-5 h-5" />
-                  <span>BUY NOW • {formatCurrency(product.sellingPrice * quantity)}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <p className="text-[11px] text-center text-slate-500">
-                  ⚡ Express Checkout: Pay via UPI (Google Pay / PhonePe) or Cash on Delivery
-                </p>
+                {activeHotspot === 3 && (
+                  <div className="absolute bottom-8 left-0 w-52 bg-slate-900 text-white p-2.5 rounded-xl text-[10px] shadow-xl z-20">
+                    Corrosion-resistant nickel coating prevents mineral scaling in hard water.
+                  </div>
+                )}
               </div>
+            </div>
 
-              {/* Delivery & Assurance Details */}
-              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/60 space-y-3 text-xs">
-                <div className="flex items-start gap-2.5">
-                  <Truck className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-slate-800">
-                      Standard Express Shipping: FREE
-                    </p>
-                    <p className="text-slate-500">
-                      Estimated delivery within {deliveryDays} via BlueDart / Delhivery.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-slate-800">
-                      {product.warrantyInfo || "2 Years Manufacturer Warranty"}
-                    </p>
-                    <p className="text-slate-500">
-                      Doorstep brand service support across 500+ Indian cities.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-slate-800">
-                      48-Hour Replacement Guarantee
-                    </p>
-                    <p className="text-slate-500">
-                      Instant replacement provided in case of transit damage.
-                    </p>
-                  </div>
-                </div>
-              </div>
+            {/* Slider Dots matching reference */}
+            <div className="flex items-center justify-center gap-2 mt-4">
+              {[0, 1, 2, 3].map((dot) => (
+                <button
+                  key={dot}
+                  type="button"
+                  onClick={() => setActiveSlide(dot)}
+                  className={`h-2 rounded-full transition-all ${
+                    activeSlide === dot ? "w-6 bg-sky-600" : "w-2 bg-sky-200 hover:bg-sky-400"
+                  }`}
+                  aria-label={`Slide ${dot + 1}`}
+                />
+              ))}
             </div>
           </div>
         </div>

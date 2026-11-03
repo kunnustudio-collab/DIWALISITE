@@ -1,6 +1,7 @@
-"useContent";
+"use client";
+
 import React from "react";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Tag, Truck, RefreshCw, Lock } from "lucide-react";
 
 interface AnnouncementBarProps {
   text?: string;
@@ -9,25 +10,37 @@ interface AnnouncementBarProps {
 }
 
 export function AnnouncementBar({
-  text = "🔥 Winter Special: Flat 32% Off on Havells Zella 1000W + Free Express Shipping India-Wide!",
+  text = "Winter Special Offer - Get Flat ₹200 OFF on Your Order!",
   enabled = true,
-  link = "#hero-buy",
 }: AnnouncementBarProps) {
   if (!enabled) return null;
 
   return (
-    <div className="bg-gradient-to-r from-sky-700 via-blue-700 to-indigo-800 text-white text-xs sm:text-sm py-2 px-4 shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-center text-center gap-2 font-medium">
-        <Sparkles className="w-4 h-4 text-amber-300 animate-pulse shrink-0" />
-        <span>{text}</span>
-        {link && (
-          <a
-            href={link}
-            className="hidden sm:inline-flex items-center gap-1 font-semibold underline underline-offset-2 hover:text-amber-200 transition-colors"
-          >
-            Claim Offer <ArrowRight className="w-3.5 h-3.5" />
-          </a>
-        )}
+    <div className="bg-[#0b1e36] text-white text-[11px] sm:text-xs py-2 px-4 shadow-sm border-b border-sky-900/40">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center font-medium">
+        {/* Left Offer */}
+        <div className="flex items-center gap-2">
+          <Tag className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+          <span>{text}</span>
+        </div>
+
+        {/* Right Value Points */}
+        <div className="hidden md:flex items-center gap-4 text-slate-300 text-[11px]">
+          <span className="flex items-center gap-1.5">
+            <Truck className="w-3.5 h-3.5 text-sky-400" />
+            <span>Free Shipping</span>
+          </span>
+          <span className="text-slate-600">|</span>
+          <span className="flex items-center gap-1.5">
+            <RefreshCw className="w-3.5 h-3.5 text-sky-400" />
+            <span>Easy Returns</span>
+          </span>
+          <span className="text-slate-600">|</span>
+          <span className="flex items-center gap-1.5">
+            <Lock className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Secure Checkout</span>
+          </span>
+        </div>
       </div>
     </div>
   );

@@ -80,29 +80,29 @@ async function main() {
     data: [
       {
         productId: product.id,
-        url: "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=1000&q=80",
-        altText: "Havells Zella 1000W Immersion Rod in Sleek Blue Finish",
+        url: "/images/hero-rod-splash-2x.jpg",
+        altText: "Havells Zella 1000W Immersion Rod in Dynamic Water Splash",
         displayOrder: 1,
         isThumbnail: true,
       },
       {
         productId: product.id,
+        url: "/images/zella-head-closeup-2x.jpg",
+        altText: "Havells Zella Electric Blue Ergonomic Handle & Indicator",
+        displayOrder: 2,
+        isThumbnail: false,
+      },
+      {
+        productId: product.id,
         url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80",
         altText: "Nickel Plated Heating Element Close-up",
-        displayOrder: 2,
+        displayOrder: 3,
         isThumbnail: false,
       },
       {
         productId: product.id,
         url: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=1000&q=80",
         altText: "Temperature Setting Knob and Heating Indicator",
-        displayOrder: 3,
-        isThumbnail: false,
-      },
-      {
-        productId: product.id,
-        url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80",
-        altText: "Heavy-duty 3-pin Molded Plug & Collapsible Hanger",
         displayOrder: 4,
         isThumbnail: false,
       },
@@ -187,18 +187,18 @@ async function main() {
 
   // 6. Site Settings
   const defaultSettings = [
-    { key: "store_name", value: "AquaThermal Essentials", group: "branding" },
-    { key: "store_tagline", value: "Authorized Reseller of Premium Winter Warmth Essentials", group: "branding" },
+    { key: "store_name", value: "AquaHome", group: "branding" },
+    { key: "store_tagline", value: "Smart Home Essentials", group: "branding" },
     { key: "logo_url", value: "", group: "branding" },
     { key: "brand_color", value: "#0284c7", group: "branding" },
-    { key: "seller_disclaimer", value: "AquaThermal Essentials is an independent authorized retail stockist. 'Havells' and 'Zella' are registered trademarks of Havells India Ltd. This store is independently operated and not owned or endorsed by Havells India Ltd.", group: "branding" },
-    { key: "support_email", value: "care@aquathermal.store", group: "contact" },
+    { key: "seller_disclaimer", value: "AquaHome Smart Home Essentials is an authorized independent retail stockist. 'Havells' and 'Zella' are registered trademarks of Havells India Ltd. This store is independently operated and not owned or endorsed by Havells India Ltd.", group: "branding" },
+    { key: "support_email", value: "care@aquahome.store", group: "contact" },
     { key: "support_phone", value: "+91 98765 43210", group: "contact" },
     { key: "support_whatsapp", value: "+919876543210", group: "contact" },
     { key: "business_address", value: "Plot 42, Electronics Zone, Phase IV, Gurgaon, Haryana 122016, India", group: "contact" },
     { key: "announcement_enabled", value: "true", group: "announcement" },
-    { key: "announcement_text", value: "⚡ Winter Special: Flat 32% Off on Havells Zella 1000W + Free Express Shipping India-Wide!", group: "announcement" },
-    { key: "announcement_link", value: "#buy-now", group: "announcement" },
+    { key: "announcement_text", value: "Winter Special Offer - Get Flat ₹200 OFF on Your Order!", group: "announcement" },
+    { key: "announcement_link", value: "#hero-buy", group: "announcement" },
     { key: "shipping_fee", value: "0", group: "general" },
     { key: "estimated_delivery_days", value: "2 to 4 Business Days", group: "general" },
   ];
@@ -406,7 +406,7 @@ async function main() {
       merchantId: process.env.YOUPI_MERCHANT_ID || "youpi_merchant_demo_01",
       maskedApiKey: "yk_test_••••••••••••3421",
       maskedWebhookSecret: "whsec_test_••••••••••••9812",
-      customerReturnUrl: "http://localhost:3000/checkout/verification",
+      customerReturnUrl: "http://localhost:9090/checkout/verification",
       allowedMethods: "MANUAL_UPI,COD",
     },
     create: {
@@ -417,7 +417,7 @@ async function main() {
       merchantId: process.env.YOUPI_MERCHANT_ID || "youpi_merchant_demo_01",
       maskedApiKey: "yk_test_••••••••••••3421",
       maskedWebhookSecret: "whsec_test_••••••••••••9812",
-      customerReturnUrl: "http://localhost:3000/checkout/verification",
+      customerReturnUrl: "http://localhost:9090/checkout/verification",
       allowedMethods: "MANUAL_UPI,COD",
     },
   });

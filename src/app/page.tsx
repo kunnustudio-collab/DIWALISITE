@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { AnnouncementBar } from "@/components/storefront/AnnouncementBar";
 import { Header } from "@/components/storefront/Header";
 import { ProductHero } from "@/components/storefront/ProductHero";
+import { ValueBar } from "@/components/storefront/ValueBar";
+import { WhyChooseSection } from "@/components/storefront/WhyChooseSection";
+import { DetailsAndReviewsRow } from "@/components/storefront/DetailsAndReviewsRow";
 import { BenefitsSection } from "@/components/storefront/BenefitsSection";
 import { ProductDetailsSection } from "@/components/storefront/ProductDetailsSection";
-import { WhyBuyFromUsSection } from "@/components/storefront/WhyBuyFromUsSection";
-import { ReviewsSection } from "@/components/storefront/ReviewsSection";
 import { FaqSection } from "@/components/storefront/FaqSection";
 import { FinalCtaSection } from "@/components/storefront/FinalCtaSection";
 import { Footer } from "@/components/storefront/Footer";
@@ -31,7 +32,7 @@ export default async function HomePage() {
         <div className="bg-white p-8 rounded-2xl shadow border border-slate-200 max-w-md">
           <h1 className="text-xl font-bold text-slate-800">Product Initializing</h1>
           <p className="text-sm text-slate-600 mt-2">
-            The store catalog is setting up. Please ensure database seed has completed.
+            The catalog is setting up. Please ensure database seed has completed.
           </p>
         </div>
       </div>
@@ -64,27 +65,6 @@ export default async function HomePage() {
     ratingDistribution[item.rating] = item._count.id;
   });
 
-  // Approved reviews list for customer display
-  const approvedReviews = await prisma.review.findMany({
-    where: {
-      productId: product.id,
-      status: "APPROVED",
-      isDemoData: false,
-    },
-    select: {
-      id: true,
-      customerName: true,
-      rating: true,
-      title: true,
-      comment: true,
-      imageUrl: true,
-      isVerifiedPurchase: true,
-      createdAt: true,
-    },
-    orderBy: { createdAt: "desc" },
-    take: 6,
-  });
-
   // 3. Fetch Site Settings
   const settingsList = await prisma.siteSetting.findMany();
   const settings: Record<string, string> = {};
@@ -104,38 +84,40 @@ export default async function HomePage() {
     ratingDistribution,
   };
 
-  const formattedReviews = approvedReviews.map((r) => ({
-    ...r,
-    createdAt: r.createdAt.toISOString(),
-  }));
-
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Announcement Bar */}
+    <div className="flex flex-col min-h-screen bg-white">
+      {/* 1. Announcement Bar */}
       <AnnouncementBar
         text={settings["announcement_text"]}
         enabled={settings["announcement_enabled"] !== "false"}
-        link={settings["announcement_link"] || "#product-overview"}
       />
 
-      {/* Main Header */}
+      {/* 2. Main Header */}
       <Header
         storeName={settings["store_name"]}
         supportPhone={settings["support_phone"]}
       />
 
       <main className="flex-1">
-        {/* Product Hero */}
+        {/* 3. Product Hero Section */}
         <ProductHero
           product={product}
           stats={stats}
-          deliveryDays={settings["estimated_delivery_days"]}
         />
 
-        {/* Benefits & Verified Features */}
+        {/* 4. Value Proposition Bar (4 columns below hero) */}
+        <ValueBar />
+
+        {/* 5. Why Choose AquaHome? Section (4 sky-blue cards) */}
+        <WhyChooseSection />
+
+        {/* 6. Two-Column Feature Grid (Product Details Card + Customer Reviews Card) */}
+        <DetailsAndReviewsRow stats={stats} />
+
+        {/* 7. Benefits & Verified Manufacturer Specifications */}
         <BenefitsSection features={product.features} />
 
-        {/* Product Technical Details & Safety Precautions */}
+        {/* 8. Detailed Specifications Table & Precautions */}
         <ProductDetailsSection
           description={product.description}
           specs={product.specs}
@@ -143,23 +125,14 @@ export default async function HomePage() {
           warrantyInfo={product.warrantyInfo}
         />
 
-        {/* Why Buy From Us */}
-        <WhyBuyFromUsSection />
-
-        {/* Customer Reviews & Moderated Submissions */}
-        <ReviewsSection
-          initialReviews={formattedReviews}
-          stats={stats}
-        />
-
-        {/* FAQs */}
+        {/* 9. FAQs */}
         <FaqSection faqs={faqs} />
 
-        {/* Final CTA Purchase Box */}
+        {/* 10. Final CTA Purchase Box */}
         <FinalCtaSection product={product} />
       </main>
 
-      {/* Footer */}
+      {/* 11. Footer */}
       <Footer
         storeName={settings["store_name"]}
         supportEmail={settings["support_email"]}

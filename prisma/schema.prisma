@@ -250,7 +250,7 @@ model PaymentSetting {
   merchantId          String   @default("youpi_merchant_test_01")
   maskedApiKey        String   @default("yk_test_••••••••••••3421")
   maskedWebhookSecret String   @default("ws_test_••••••••••••9812")
-  customerReturnUrl   String   @default("http://localhost:3000/checkout/verification")
+  customerReturnUrl   String   @default("http://localhost:9090/checkout/verification")
   allowedMethods      String   @default("MANUAL_UPI,COD")
   updatedAt           DateTime @updatedAt
 }
