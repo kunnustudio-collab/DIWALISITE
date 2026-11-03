@@ -7,6 +7,7 @@ import { ValueBar } from "@/components/storefront/ValueBar";
 import { WhyChooseSection } from "@/components/storefront/WhyChooseSection";
 import { DetailsAndReviewsRow } from "@/components/storefront/DetailsAndReviewsRow";
 import { BenefitsSection } from "@/components/storefront/BenefitsSection";
+import { VisualShowcaseSection } from "@/components/storefront/VisualShowcaseSection";
 import { ProductDetailsSection } from "@/components/storefront/ProductDetailsSection";
 import { FaqSection } from "@/components/storefront/FaqSection";
 import { FinalCtaSection } from "@/components/storefront/FinalCtaSection";
@@ -117,7 +118,10 @@ export default async function HomePage() {
         {/* 7. Benefits & Verified Manufacturer Specifications */}
         <BenefitsSection features={product.features} />
 
-        {/* 8. Detailed Specifications Table & Precautions */}
+        {/* 8. Official Visual Infographic & Lifestyle Showcase */}
+        <VisualShowcaseSection />
+
+        {/* 9. Detailed Specifications Table & Precautions */}
         <ProductDetailsSection
           description={product.description}
           specs={product.specs}

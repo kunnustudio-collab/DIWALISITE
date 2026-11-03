@@ -48,6 +48,18 @@ const defaultGallery = [
     title: "Dual View (Hero)",
   },
   {
+    id: "hero-infographic",
+    url: "/images/havells-zella-features-infographic.jpg",
+    altText: "Havells Zella Infographic - Adjustable Heat Settings, Heating Element & Sturdy Build",
+    title: "Feature Infographic",
+  },
+  {
+    id: "hero-lifestyle",
+    url: "/images/havells-zella-safety-lifestyle.jpg",
+    altText: "Havells Zella Lifestyle - Safe, Fast & Energy Efficient with Heavy Duty 3-Pin Plug",
+    title: "Safety & Efficiency",
+  },
+  {
     id: "hero-hanger",
     url: "/images/zella-opened-hanger.jpg",
     altText: "Havells Zella with Open Bucket Hanger Flaps and Nickel Coils",
@@ -83,12 +95,15 @@ export function ProductHero({ product }: ProductHeroProps) {
   // Gallery items - prioritize product.images from database if populated
   const gallery =
     product.images && product.images.length > 0
-      ? product.images.map((img, i) => ({
-          id: img.id,
-          url: img.url,
-          altText: img.altText || product.name,
-          title: defaultGallery[i]?.title || `View ${i + 1}`,
-        }))
+      ? product.images.map((img, i) => {
+          const match = defaultGallery.find((g) => g.url === img.url);
+          return {
+            id: img.id,
+            url: img.url,
+            altText: img.altText || product.name,
+            title: match?.title || `View ${i + 1}`,
+          };
+        })
       : defaultGallery;
 
   const currentImage = gallery[activeSlide] || gallery[0];
@@ -297,7 +312,7 @@ export function ProductHero({ product }: ProductHeroProps) {
               </button>
 
               {/* Interactive Hotspot Pins (Only on Slide 0 - Dual Hero View) */}
-              {activeSlide === 0 && (
+              {(activeSlide === 0 || currentImage.url.includes("havells-zella-hero")) && (
                 <>
                   {/* Hotspot 1: Temperature Dial (Top Left) */}
                   <div
